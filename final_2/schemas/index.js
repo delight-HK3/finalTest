@@ -11,17 +11,17 @@ const connect = () => {
     dbName: 'webchat',
     useNewUrlParser: true,
   }).then(() => {
-    console.log("MongoDB Connection success");
+    console.log("MongoDB 연결 성공");
   }).catch((err) => {
-    console.error("MongoDB Connection error", err);
+    console.error("MongoDB 연결 에러", err);
   });
 };
 
 mongoose.connection.on('error', (error) => {
-  console.error('MongoDB Connection error', error);
+  console.error('MongoDB 연결 에러', error);
 });
 mongoose.connection.on('disconnected', () => {
-  console.error('MongoDB Connection disconnect try again');
+  console.error('MongoDB 연결 재시도');
   connect();
 });
 

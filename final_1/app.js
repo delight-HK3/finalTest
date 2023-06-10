@@ -36,7 +36,7 @@ app.post('/user',function(req, res){
     //users.push({ name: 'LeeDabean', age: 25 })
         
     // post 요청 성공시 success를 반환  
-    return res.send({success: true});
+    return res.send({users: users});
 })
 
 require("./app/routes/customer.routes.js")(app);

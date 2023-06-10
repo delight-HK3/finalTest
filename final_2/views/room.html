@@ -1,21 +1,27 @@
 {% extends 'layout.html' %}
 
+
 {% block content %}
-  <fieldset>
-    <legend>채팅방 생성</legend>
-    <form action="/room" method="post">
-      <div>
-        <input type="text" name="title" placeholder="방 제목">
-      </div>
-      <div>
-        <input type="number" name="max" placeholder="수용 인원(최소 2명)" min="2" value="10">
-      </div>
-      <div>
-        <input type="password" name="password" placeholder="비밀번호(없으면 공개방)">
-      </div>
-      <div>
-        <button type="submit">생성</button>
-      </div>
-    </form>
-  </fieldset>
+  <div class="container" style="width: 360px;">
+      <br><br>
+      <h1 style="text-align: center;">채팅방 만들기</h1>
+      <br>
+      <form action="/room" method="post">
+        <div style="margin-bottom: 10px;">
+          <label for="title" class="form-label" style="margin-bottom: 0px">방 제목</label>
+          <input type="text" name="title" id="title" class="form-control" placeholder="방 제목">
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label for="title" class="form-label" style="margin-bottom: 0px">방 수용인원</label>
+          <input type="number" name="max" class="form-control" placeholder="수용 인원(최소 2명)" min="2" value="10">
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label for="password" class="form-label" style="margin-bottom: 0px">방 비밀번호</label>
+          <input type="password" name="password" id="password" class="form-control" placeholder="비밀번호(없으면 공개방)">
+        </div><br>
+        <div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">생 성</button>
+        </div>
+      </form>
+  </div>
 {% endblock %}

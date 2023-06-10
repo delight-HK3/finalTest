@@ -1,42 +1,45 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  <h1>{{title}}</h1>
-  <a href="/" id="exit-btn">방 나가기</a>
-  <fieldset>
-    <legend>채팅 내용</legend>
+<br>
+<div class="container" style="width: 500px; border: 1px solid black;">
+  <h1 style="text-align: center;">{{title}}</h1>
+  <a href="/" class="btn btn-sm btn-success" style="float: right;">방 나가기</a>
+  <br>
+  <hr>
     <div id="chat-list">
       {% for chat in chats %}
         {% if chat.user === user %}
-          <div class="mine" style="color: {{chat.user}}">
-            <div>{{chat.user}}</div>
-            {% if chat.gif %}}
-              <img src="/gif/{{chat.gif}}">
-            {% else %}
+          <div class="mine" style="color: {{chat.user}}; margin-top: 10px">
+              <div>{{chat.user}}</div>
               <div>{{chat.chat}}</div>
-            {% endif %}
           </div>
         {% elif chat.user === 'system' %}
-          <div class="system">
+          <div class="system" >
             <div>{{chat.chat}}</div>
           </div>
         {% else %}
           <div class="other" style="color: {{chat.user}}">
             <div>{{chat.user}}</div>
-            {% if chat.gif %}
-              <img src="/gif/{{chat.gif}}">
-            {% else %}
-              <div>{{chat.chat}}</div>
-            {% endif %}
+            <div>{{chat.chat}}</div>
           </div>
         {% endif %}
       {% endfor %}
     </div>
-  </fieldset>
+    <br>
+    <hr>
   <form action="/chat" id="chat-form" method="post" enctype="multipart/form-data">
-    <input type="text" id="chat" name="chat">
-    <button type="submit">전송</button>
+    <div class="input-group">
+      <input type="text" id="chat" name="chat" class="form-control">
+      <button type="submit" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+        </svg>
+      </button>
+    </div>
   </form>
+  <br>
+</div>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
