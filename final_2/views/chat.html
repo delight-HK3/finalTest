@@ -3,6 +3,7 @@
 {% block content %}
 <br>
 <div class="container" style="width: 500px; border: 1px solid black;">
+  <br>
   <h1 style="text-align: center;">{{title}}</h1>
   <a href="/" class="btn btn-sm btn-success" style="float: right;">방 나가기</a>
   <br>
@@ -77,10 +78,6 @@
         const chat = document.createElement('div');
         chat.textContent = data.chat;
         div.appendChild(chat);
-      } else {
-        const gif = document.createElement('img');
-        gif.src = '/gif/' + data.gif;
-        div.appendChild(gif);
       }
       div.style.color = data.user;
       document.querySelector('#chat-list').appendChild(div);

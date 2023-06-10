@@ -27,7 +27,7 @@ module.exports = (server, app, sessionMiddleware) => {
                 chat: `${socket.request.session.color} 님이 입장하셨습니다.`,
             });
         });
-    
+        
         socket.on('disconnect', async () => {
             console.log('chat 접속 해제');
             const { referer } = socket.request.headers; // 브라우저 주소
