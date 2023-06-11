@@ -1,0 +1,16 @@
+{
+  "name": "cli-node",
+  "version": "0.0.1",
+  "description": "nodejs cli program",
+  "main": "index.js",
+  "author": "LeeDabean",
+  "license": "ISC",
+  "bin": {
+    "cli": "./command.js"
+  },
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "commander": "^9.5.0",
+    "inquirer": "^8.2.5"
+  }
+}
