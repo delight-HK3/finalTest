@@ -1,44 +1,70 @@
-// index.js
-
 const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const morgan = require('morgan');
+const session = require('express-session');
+const nunjucks = require('nunjucks');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const v1 = require('./routes/v1');
+const authRouter = require('./routes/auth');
+const indexRouter = require('./routes');
+const { sequelize } = require('./models');
+const passportConfig = require('./passport');
+
 const app = express();
-const users = []; // 개인정보
-const Customer = require('./app/models/customer.model.js');
-const path = require('path'); 
+passportConfig();
+app.set('port', process.env.PORT || 8090);
+app.set('view engine', 'html');
+nunjucks.configure('views', {
+  express: app,
+  watch: true,
+});
+sequelize.sync({ force: false })
+  .then(() => {
+    console.log('데이터베이스 연결 성공');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 
-app.use(express.json()); // JSON parse 미들웨어 추가
+app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(session({
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.COOKIE_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.get('/', function(req, res){
-    //return res.send('hello world');
-    Customer.getAll((result) => {
-        res.render('index',{data: result});
-    });
+app.use('/v1', v1);
+app.use('/auth', authRouter);
+app.use('/', indexRouter);
+
+app.use((req, res, next) => {
+  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  error.status = 404;
+  next(error);
 });
 
-app.set('view engine', 'ejs'); 
-app.set('views', path.join(__dirname, 'views')); 
-app.engine('ejs', require('ejs').__express);
+app.use((err, req, res, next) => {
+  res.locals.message = err.message;
+  res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
+  res.status(err.status || 500);
+  res.render('error');
+});
 
-app.get('/user', function (req, res) {
-    // 첫번째 인자 req: 
-    //클라이언트에서 요청이올 때, ReqBody, ReqHeader, url 등등 그런 정보들이 모두 들어있다.
-    // 두번째 인자 res: 
-    // 클라이언트에 응답할 때 필요한 모든 정보들이 들어있다. 지금부터 저희가 작성할 내용 외에도 기본적으로 
-    // 들어가야되는 네트워크 정보라던지 그런 것들이 모두 여기 들어있다.
-    return res.send({ users: users }); 
-})
-
-app.post('/user',function(req, res){
-    //console.log(req.body);
-    users.push({ name: req.body.name, age: req.body.age })
-
-    //users.push({ name: 'LeeDabean', age: 25 })
-        
-    // post 요청 성공시 success를 반환  
-    return res.send({users: users});
-})
-
-require("./app/routes/customer.routes.js")(app);
-app.listen(8090, function () {
-    console.log('8090포트로 연결중 입니다.');
-})
+app.listen(app.get('port'), () => {
+  console.log(app.get('port'), '번 포트에서 대기중');
+});
